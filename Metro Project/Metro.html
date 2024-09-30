@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Metro Waiting Time Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            position: relative;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            color: black;
+            margin-bottom: 20px;
+        }
+
+        .image-wrapper {
+            margin-bottom: 20px;
+        }
+
+        .instructions {
+            margin-bottom: 20px;
+            font-size: 1.1em;
+            color: #333;
+            line-height: 1.5;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+        }
+
+        input, select, button {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin: 5px 0 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #result {
+            text-align: center;
+            font-size: 1.5em;
+            color: #28a745; /* Initial green color */
+            margin-top: 20px;
+        }
+
+        /* Adding a red color after blue */
+        .result-red {
+            color: red;
+        }
+
+        #celebrationImage {
+            display: none; /* Hidden by default */
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Metro Waiting Time Calculator</h1>
+        
+        <div class="image-wrapper">
+            <img src="https://thumbs.dreamstime.com/b/metro-subway-tiny-people-flat-vector-illustration-passengers-cartoon-characters-rapid-transit-modern-city-public-transport-154526818.jpg" alt="Train Station" style="width: 100%; height: auto; border-radius: 8px;">
+        </div>
+
+        <div class="instructions">
+            <p><strong>User Instructions:</strong></p>
+            <p>1. No negative input values are allowed.<br>
+            2. The destination must be less than the maximum station value.<br>
+            3. Assumed time to travel 1 km is 1 hour.</p>
+        </div>
+        
+        <label for="station">Current Station:</label>
+        <input type="number" id="station" placeholder="Train Station" min="0">
+
+        <label for="maxStation">Maximum Station Value:</label>
+        <input type="number" id="maxStation" placeholder="Journey distance" min="1">
+
+        <label for="destination">Destination Station Value:</label>
+        <input type="number" id="destination" placeholder="User station" min="0">
+
+        <label for="direction">Direction:</label>
+        <select id="direction">
+            <option value="A">Arrival</option>
+            <option value="R">Returning</option>
+        </select>
+
+        <button onclick="calculateWaitingTime()">Calculate Waiting Time</button>
+        <p id="result"></p>
+        <img id="celebrationImage" src="https://i.pinimg.com/564x/a4/b3/ca/a4b3caff132191e7a85a518cde408a49.jpg" alt="Celebration Image">
+    </div>
+
+    <script>
+        function calculateWaitingTime() {
+            const n = parseInt(document.getElementById('station').value);
+            const maxStation = parseInt(document.getElementById('maxStation').value);
+            const destination = parseInt(document.getElementById('destination').value);
+            const c = document.getElementById('direction').value;
+
+            // Check for negative values
+            if (n < 0 || maxStation < 0 || destination < 0) {
+                alert("Invalid input: Values cannot be negative.");
+                resetInputs();
+                return;
+            }
+
+            // Check if destination is greater than maximum station value
+            if (destination > maxStation) {
+                alert("Invalid input: Destination cannot be greater than maximum station value.");
+                resetInputs();
+                return;
+            }
+
+            let waitingTime = 0;
+
+            if (c === 'A') { // Arrival
+                if (n <= destination) {
+                    waitingTime = destination - n; // Time to reach the destination station
+                } else {
+                    waitingTime = (maxStation - n) + (maxStation - destination); // Time to max and then to destination
+                }
+            } else { // Returning
+                if (n >= destination) {
+                    waitingTime = n - destination; // Time from current station to destination
+                } else {
+                    waitingTime = n + destination; // Travel to 0 and then to destination
+                }
+            }
+
+            // Display waiting time in hours
+            document.getElementById('result').innerText = `Waiting Time: ${waitingTime} hours`;
+            document.getElementById('result').classList.add('result-red'); // Change color to red
+
+            // Show celebration image
+            document.getElementById('celebrationImage').style.display = 'block';
+        }
+
+        function resetInputs() {
+            document.getElementById('station').value = '';
+            document.getElementById('maxStation').value = '';
+            document.getElementById('destination').value = '';
+            document.getElementById('celebrationImage').style.display = 'none'; // Hide the image
+            document.getElementById('result').classList.remove('result-red'); // Remove red color
+        }
+    </script>
+</body>
+</html>
